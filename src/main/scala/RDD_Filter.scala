@@ -97,12 +97,12 @@ def main(args:Array[String]){
 
 	var rdd_degree =rdd.map{case(k,v)=>(k,(v._2))}
 
-	var logData:String="RDD_Degree count"+rdd_degree.count()
+	var logData:String="RDD_Degree count "+rdd_degree.count()+"\n"
 
 
 	var rdd_volume = rdd.map{case(k,v)=>(k,(v._1))}
 
-	logData+="RDD+Volume count"+rdd_volume.count()
+	logData+="RDD+Volume count "+rdd_volume.count()+"\n"
 
 	
 
@@ -118,11 +118,11 @@ def main(args:Array[String]){
 	
 //	rdd_degree_filtered.count()
 
-	logData+="Rdd_degree_filtered_count"+rdd_degree_filtered.count()
+	logData+="Rdd_degree_filtered_count"+rdd_degree_filtered.count()+"\n"
 
 	var rdd_volume_filtered = rdd_volume.filter{case(k,v)=>(v.toDouble<percentile_99th_volume)}
 
-	logData+="Rdd_degree_filtered_count"+rdd_volume_filtered.count()
+	logData+="Rdd_degree_filtered_count"+rdd_volume_filtered.count()+"\n"
 	//rdd_volume_filtered.count()
 
 	var rdd_filtered = rdd_degree_filtered.join(rdd_volume_filtered)
@@ -133,8 +133,10 @@ def main(args:Array[String]){
 
 	rdd_filtered_final.count()
 
+	
 	rdd_filtered_final.saveAsTextFile(outputPath+"filtered"+callDegreeFile1)
-	sc.parallelize(logData).coalesce(1).saveAsTextFile(outputPath+month+"filteredlog.txt")
+	print(logData)
+	sc.parallelize(logData).coalesce(1,true).saveAsTextFile(outputPath+month+"filteredlog.txt")
 }
 
 }
